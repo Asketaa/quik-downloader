@@ -1,0 +1,16 @@
+# QUIK Downloader Requirements
+# Python 3.7+ is required
+
+# External dependencies
+colorama>=0.4.4
+
+# The following are part of Python standard library:
+# - os
+# - sys
+# - subprocess
+# - configparser
+# - urllib.parse
+# - time
+# - typing 
+
+# Note: FFMPEG must be installed separately and available in PATH 
