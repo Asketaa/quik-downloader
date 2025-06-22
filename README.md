@@ -2,7 +2,6 @@
 
 A fast, professional, and cross-platform M3U8 video downloader for your terminal, powered by Python and FFMPEG.
 
-![image](https://github.com/user-attachments/assets/e60388d1-c1f1-43f1-b924-a15d7e5d8a0d)
 
 ## Features
 
