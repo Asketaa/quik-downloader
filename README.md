@@ -16,6 +16,45 @@ A fast, professional, and cross-platform M3U8 video downloader for your terminal
 
 ---
 
+## Prerequisites
+
+Before you begin, please ensure you have the following installed on your system. The provided installation scripts handle the project's dependencies, but they **do not** install Python or FFMPEG. You must install them manually.
+
+- **Python 3.7+**
+  <details>
+  <summary><b>Click for Python Installation Instructions</b></summary>
+  
+  - **Windows**: Download from [python.org](https://www.python.org/downloads/). **Important:** During installation, make sure to check the box that says **"Add Python to PATH"**.
+  - **macOS**: The easiest way is to use [Homebrew](https://brew.sh/): `brew install python`
+  - **Linux (Debian/Ubuntu)**: `sudo apt update && sudo apt install python3`
+  
+  </details>
+
+- **FFMPEG**
+  <details>
+  <summary><b>Click for FFMPEG Installation Instructions</b></summary>
+  
+  FFMPEG is essential for downloading and processing videos. You must install it and ensure it's accessible via your system's PATH.
+  
+  - **On Windows**:
+    1.  Go to the [FFMPEG downloads page](https://www.gyan.dev/ffmpeg/builds/) and download a release build (e.g., `ffmpeg-release-full.7z`).
+    2.  Extract the archive using a tool like [7-Zip](https://www.7-zip.org/).
+    3.  Move the extracted folder to a permanent location, like `C:\ffmpeg`.
+    4.  Add the `bin` directory from that folder (e.g., `C:\ffmpeg\bin`) to your system's `PATH` environment variable.
+
+  - **On macOS**:
+    The easiest way is to use [Homebrew](https://brew.sh/): `brew install ffmpeg`
+
+  - **On Linux (Debian/Ubuntu)**:
+    ```bash
+    sudo apt update && sudo apt install ffmpeg
+    ```
+    
+  *After installing, you may need to restart your terminal or PC for the `PATH` changes to take effect.*
+  </details>
+
+---
+
 ## Easy Installation & Usage
 
 For the simplest setup, use the provided scripts.
@@ -35,42 +74,6 @@ For the simplest setup, use the provided scripts.
 
 <details>
 <summary><b>For Advanced Users: Manual Installation</b></summary>
-
-## Prerequisites
-
-This application requires **Python 3.7+** and **FFMPEG**.
-
-### 1. Python 3.7+
-
-If you don't have Python installed, download it from [python.org](https://www.python.org/downloads/).
-
-### 2. FFMPEG
-
-FFMPEG is essential for downloading and processing videos. You must install it and ensure it's accessible via your system's PATH, or specify its location in the app's settings.
-
-<details>
-<summary><b>Click for FFMPEG Installation Instructions</b></summary>
-
-#### On Windows:
-1.  Go to the [FFMPEG downloads page](https://www.gyan.dev/ffmpeg/builds/) and download a release build (e.g., `ffmpeg-release-full.7z`).
-2.  Extract the archive using a tool like [7-Zip](https://www.7-zip.org/).
-3.  Move the extracted folder to a permanent location, like `C:\ffmpeg`.
-4.  Add the `bin` directory from that folder (e.g., `C:\ffmpeg\bin`) to your system's `PATH` environment variable.
-
-#### On macOS:
-The easiest way is to use [Homebrew](https://brew.sh/):
-```bash
-brew install ffmpeg
-```
-
-#### On Linux (Debian/Ubuntu):
-```bash
-sudo apt update && sudo apt install ffmpeg
-```
-
-</details>
-
----
 
 ## Installation & Usage
 
