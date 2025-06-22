@@ -37,10 +37,22 @@ fi
 echo "✅ Requirements installed successfully."
 deactivate
 
-echo "---------------------------------------------------"
-echo "🎉 Installation Complete!"
-echo "To run the application, use the 'run.sh' script."
-echo "---------------------------------------------------"
+echo ""
+echo "==========================================="
+echo "🎉 INSTALLATION COMPLETED SUCCESSFULLY! 🎉"
+echo "==========================================="
+echo ""
+echo "✅ Python 3 detected and working"
+echo "✅ Virtual environment created in 'venv/'"
+echo "✅ All dependencies installed"
+echo ""
+echo "Next steps:"
+echo "  • To run the application, use: bash run.sh"
+echo "  • Or double-click 'run.sh' if your system supports it"
+echo ""
+echo "==========================================="
+echo ""
 
-# Pause to let user read the output
-read -p "Press Enter to exit..." 
+# Multiple methods to pause and ensure user sees the output
+echo "Press Enter to close this window..."
+read -r 
