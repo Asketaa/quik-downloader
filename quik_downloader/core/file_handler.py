@@ -31,7 +31,7 @@ class FileHandler:
         Returns:
             Dict[str, Any]: Settings dictionary
         """
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(interpolation=None)
         
         try:
             if os.path.exists(self.settings_file):
@@ -42,6 +42,7 @@ class FileHandler:
                     for key in self.default_settings:
                         settings[key] = config.get('SETTINGS', key, fallback=self.default_settings[key])
                     
+                    settings['download_directory'] = self.normalize_directory(settings['download_directory'])
                     logger.info("Settings loaded successfully")
                     return settings
                 else:
@@ -66,7 +67,7 @@ class FileHandler:
         Returns:
             bool: True if successful
         """
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(interpolation=None)
         config['SETTINGS'] = settings
         
         try:
@@ -143,6 +144,23 @@ class FileHandler:
         
         return True
     
+    @staticmethod
+    def normalize_directory(directory: str) -> str:
+        """
+        Normalizes a user-supplied directory path.
+
+        Strips surrounding quotes (Windows Explorer's "Copy as path" includes
+        them), then expands environment variables and '~'. Without this, such a
+        path is stored verbatim and later fails or creates a literal '~' folder.
+
+        Args:
+            directory (str): Raw directory path
+
+        Returns:
+            str: Normalized directory path
+        """
+        return os.path.expanduser(os.path.expandvars(directory.strip().strip('"\'')))
+
     def ensure_download_directory(self, directory: str) -> bool:
         """
         Ensures download directory exists and is writable.
