@@ -8,15 +8,20 @@ from quik_downloader.utils.colors import *
 # Get logger for this module
 logger = logging.getLogger('QUIK_Downloader.file_handler')
 
+# Project root, so the application finds its own files no matter which
+# directory it was launched from (a shortcut, an elevated prompt, or
+# 'python /full/path/to/main.py' all used to create a second settings.ini).
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 class FileHandler:
     """Handles all file operations for the application."""
-    
+
     def __init__(self):
         """Initialize FileHandler with default paths."""
-        self.settings_file = 'settings.ini'
-        self.urls_file = 'URLs.txt'
+        self.settings_file = os.path.join(BASE_DIR, 'settings.ini')
+        self.urls_file = os.path.join(BASE_DIR, 'URLs.txt')
         self.default_settings = {
-            'download_directory': './downloads',
+            'download_directory': os.path.join(BASE_DIR, 'downloads'),
             'video_quality': 'best',
             'output_format': 'mp4',
             'ffmpeg_path': 'ffmpeg'
@@ -98,52 +103,26 @@ class FileHandler:
         """Read URLs from URLs.txt, creating the file if it doesn't exist."""
         urls = []
         try:
-            if not os.path.exists('URLs.txt'):
+            if not os.path.exists(self.urls_file):
                 logger.info("'URLs.txt' not found, creating it with a welcome message.")
-                with open('URLs.txt', 'w', encoding='utf-8') as f:
+                with open(self.urls_file, 'w', encoding='utf-8') as f:
                     f.write("# Welcome to QUIK Downloader!\n")
                     f.write("# Add your M3U8 video links here, one per line.\n")
                     f.write("# Lines starting with '#' are ignored.\n")
                 return [] # Return empty list on first creation
 
-            with open('URLs.txt', 'r', encoding='utf-8') as f:
+            with open(self.urls_file, 'r', encoding='utf-8') as f:
                 # Read non-empty lines that are not comments
                 urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-            
+
             logger.info(f"Read {len(urls)} URLs from 'URLs.txt'")
             return urls
-            
+
         except Exception as e:
             logger.error(f"Failed to read URLs from 'URLs.txt': {e}")
             error(f"Could not read 'URLs.txt': {e}")
             return []
-    
-    def _is_valid_url(self, url: str) -> bool:
-        """
-        Basic URL validation.
-        
-        Args:
-            url (str): URL to validate
-            
-        Returns:
-            bool: True if URL appears valid
-        """
-        url = url.strip()
-        
-        # Basic checks
-        if len(url) < 10:
-            return False
-        
-        # Must start with http/https
-        if not (url.startswith('http://') or url.startswith('https://')):
-            return False
-        
-        # Must contain a dot (domain)
-        if '.' not in url:
-            return False
-        
-        return True
-    
+
     @staticmethod
     def normalize_directory(directory: str) -> str:
         """

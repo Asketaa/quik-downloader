@@ -68,9 +68,6 @@ class VideoDownloader:
                     error("Download failed. Check FFMPEG output above for details.")
                     return False
                     
-        except subprocess.TimeoutExpired:
-            error("FFMPEG process timed out (1 hour limit).")
-            return False
         except Exception as e:
             error(f"An unexpected error occurred during download: {e}")
             logger.error(f"Exception downloading {url}: {e}")

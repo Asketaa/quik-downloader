@@ -19,7 +19,8 @@ def setup_logging():
         level=logging.INFO,
         format=log_format,
         handlers=[
-            logging.FileHandler('quik_downloader.log')
+            logging.FileHandler(os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'quik_downloader.log'))
         ]
     )
     

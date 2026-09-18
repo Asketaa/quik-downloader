@@ -180,7 +180,7 @@ class MenuInterface:
         print()
         
         try:
-            file_editor("URLs.txt")
+            file_editor(self.file_handler.urls_file)
             success("File editing completed")
         except Exception as e:
             error(f"Cannot open file: {e}")
