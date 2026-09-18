@@ -136,7 +136,8 @@ class SettingsManager:
     def _edit_download_directory(self):
         """Modifies the download directory."""
         print(f"\nCurrent: {colored_text(self.settings['download_directory'], 'info')}")
-        new_dir = input("New directory (Enter = keep current): ").strip()
+        new_dir = self.file_handler.normalize_directory(
+            input("New directory (Enter = keep current): "))
         
         if new_dir:
             if self.file_handler.ensure_download_directory(new_dir):
