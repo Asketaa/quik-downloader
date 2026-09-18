@@ -96,8 +96,8 @@ class SettingsManager:
         while True:
             self._clear_screen()
             self._display_settings()
-            choice = input(f"\n{colored_text('Select option (1-6):', 'neutral')} ").strip()
-            
+            choice = input(f"\n{colored_text('Select option (1-5):', 'neutral')} ").strip()
+
             if choice == '1':
                 self._edit_download_directory()
             elif choice == '2':
@@ -107,12 +107,10 @@ class SettingsManager:
             elif choice == '4':
                 self._edit_ffmpeg_path()
             elif choice == '5':
-                self._save_settings()
-            elif choice == '6':
                 logger.info("Exiting settings menu")
                 break
             else:
-                error("Invalid choice! Select 1-6")
+                error("Invalid choice! Select 1-5")
                 input("\nPress Enter to continue...")
     
     def _display_settings(self):
@@ -128,9 +126,9 @@ class SettingsManager:
         display_path = ffmpeg_path if ffmpeg_path != 'ffmpeg' else 'Auto (in PATH)'
         print(f"  4. FFMPEG Path: {colored_text(display_path, 'dim')}")
         
-        print(f"\n  5. {colored_text('Save Settings', 'success')}")
-        print(f"  6. {colored_text('Back to Main Menu', 'neutral')}")
-        
+        print(f"\n  5. {colored_text('Back to Main Menu', 'neutral')}")
+        print(f"\n{colored_text('Changes are saved automatically.', 'dim')}")
+
         print_separator()
     
     def _edit_download_directory(self):
@@ -140,12 +138,10 @@ class SettingsManager:
             input("New directory (Enter = keep current): "))
         
         if new_dir:
-            if self.file_handler.ensure_download_directory(new_dir):
-                self.settings['download_directory'] = new_dir
-                success(f"Updated to: {new_dir}")
-                warning("Remember: Save settings to persist!")
-            else:
+            if not self.file_handler.ensure_download_directory(new_dir):
                 error("Invalid directory path")
+            elif self._apply('download_directory', new_dir):
+                success(f"Saved: {new_dir}")
         
         input("\nPress Enter to continue...")
     
@@ -178,10 +174,9 @@ class SettingsManager:
             input("Press Enter to continue...")
             return
         
-        self.settings['video_quality'] = result
-        success(f"Quality updated to: {result}")
-        warning("Remember: Save settings to persist!")
-        
+        if self._apply('video_quality', result):
+            success(f"Quality saved: {result}")
+
         input("Press Enter to continue...")
     
     def _edit_output_format(self):
@@ -191,9 +186,8 @@ class SettingsManager:
         new_format = input("New format (Enter = keep current): ").strip().lower()
         
         if new_format and new_format in ['mp4', 'mkv', 'avi', 'mov']:
-            self.settings['output_format'] = new_format
-            success(f"Format updated to: {new_format}")
-            warning("Remember: Save settings to persist!")
+            if self._apply('output_format', new_format):
+                success(f"Format saved: {new_format}")
         elif new_format:
             error("Invalid format")
         
@@ -208,29 +202,40 @@ class SettingsManager:
         new_path = input("Enter full path to FFMPEG executable: ").strip()
         
         # If user enters nothing, we set it to the default 'ffmpeg'
-        self.settings['ffmpeg_path'] = new_path or 'ffmpeg'
-        
-        if self.settings['ffmpeg_path'] == 'ffmpeg':
-            success("FFMPEG path set to auto-detection (from PATH)")
-        else:
-            success(f"FFMPEG path updated to: {self.settings['ffmpeg_path']}")
-        
-        warning("Remember: Save settings to persist!")
+        if self._apply('ffmpeg_path', new_path or 'ffmpeg'):
+            if self.settings['ffmpeg_path'] == 'ffmpeg':
+                success("FFMPEG path set to auto-detection (from PATH)")
+            else:
+                success(f"FFMPEG path saved: {self.settings['ffmpeg_path']}")
+
         input("\nPress Enter to continue...")
     
-    def _save_settings(self):
-        """Save current settings to file."""
-        print_progress("Saving settings...")
-        
+    def _apply(self, key: str, value: str) -> bool:
+        """
+        Sets one setting and writes it to disk straight away.
+
+        Reverts the in-memory value if the write fails, so what the menu
+        displays always matches what is actually stored.
+
+        Args:
+            key (str): Setting name
+            value (str): New value
+
+        Returns:
+            bool: True if the change was saved
+        """
+        previous = self.settings[key]
+        self.settings[key] = value
+
         try:
             if self.file_handler.write_settings(self.settings):
-                logger.info("Settings saved successfully")
-                success("Settings saved successfully!")
-            else:
-                logger.error("Failed to save settings")
-                error("Failed to save settings")
+                logger.info(f"Setting '{key}' saved")
+                return True
+            logger.error(f"Failed to save setting '{key}'")
+            error("Failed to save settings")
         except Exception as e:
-            logger.error(f"Error saving settings: {e}")
+            logger.error(f"Error saving setting '{key}': {e}")
             error(f"Save failed: {e}")
-        
-        input("Press Enter to continue...") 
+
+        self.settings[key] = previous
+        return False 
